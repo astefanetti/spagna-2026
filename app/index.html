@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Roadbook Spagna 2026</title>
+<meta name="description" content="Roadbook giorno per giorno del viaggio in van in Spagna">
+<meta name="theme-color" content="#1f5c63">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Roadbook ES">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <button id="btn-back" class="icon-btn" aria-label="Indietro" hidden>←</button>
+  <div class="topbar-title">
+    <div id="topbar-title-main">Roadbook Spagna</div>
+    <div id="topbar-title-sub" class="topbar-sub"></div>
+  </div>
+  <button id="btn-refresh" class="icon-btn" aria-label="Aggiorna dati">⟳</button>
+</header>
+
+<div id="progress-wrap" class="progress-wrap">
+  <div id="progress-bar" class="progress-bar"></div>
+</div>
+
+<main id="view" class="view"></main>
+
+<nav class="bottomnav">
+  <button class="nav-btn" data-route="#/">
+    <span class="nav-icon">🏠</span><span>Oggi</span>
+  </button>
+  <button class="nav-btn" data-route="#/giorni">
+    <span class="nav-icon">📅</span><span>Giorni</span>
+  </button>
+  <button class="nav-btn" data-route="#/info">
+    <span class="nav-icon">ℹ️</span><span>Info</span>
+  </button>
+</nav>
+
+<div id="toast" class="toast" hidden></div>
+
+<script src="js/markdown.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
