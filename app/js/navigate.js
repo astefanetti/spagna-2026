@@ -21,11 +21,23 @@
   function urlsFor(lat, lon) {
     const ll = `${lat},${lon}`;
     return {
+      // ordine lon|lat|type, come da specifiche ufficiali Sygic (iOS e Android):
+      // com.sygic.aura://coordinate|lon|lat|drive
       sygicApp: `com.sygic.aura://coordinate|${lon}|${lat}|drive`,
       sygicWeb: `https://go.sygic.com/directions?to=${ll}`,
       google: `https://www.google.com/maps/dir/?api=1&destination=${ll}`,
       apple: `https://maps.apple.com/?daddr=${ll}&dirflg=d`,
       waze: `https://waze.com/ul?ll=${ll}&navigate=yes`,
+    };
+  }
+
+  // Variante per le tappe con solo indirizzo testuale (niente coordinate
+  // verificate): com.sygic.aura://search|indirizzo|drive, come da
+  // specifiche ufficiali. L'indirizzo va percent-encoded.
+  function urlsForAddress(address, googleUrl) {
+    return {
+      sygicApp: `com.sygic.aura://search|${encodeURIComponent(address)}|drive`,
+      google: googleUrl,
     };
   }
 
@@ -57,7 +69,24 @@
     }, timeoutMs);
   }
 
-  function go(target, lat, lon) {
+  function go(btn) {
+    const target = btn.getAttribute("data-nav-target");
+    const mode = btn.getAttribute("data-nav-mode") || "coord";
+
+    if (mode === "address") {
+      const address = btn.getAttribute("data-nav-address") || "";
+      const googleUrl = btn.getAttribute("data-nav-google") || "";
+      const u = urlsForAddress(address, googleUrl);
+      if (target === "sygic") {
+        openWithFallback(u.sygicApp, u.google);
+      } else if (target === "google") {
+        window.open(u.google, "_blank", "noopener");
+      }
+      return;
+    }
+
+    const lat = btn.getAttribute("data-nav-lat");
+    const lon = btn.getAttribute("data-nav-lon");
     const u = urlsFor(lat, lon);
     if (target === "sygic") {
       openWithFallback(u.sygicApp, u.google);
@@ -70,7 +99,7 @@
     }
   }
 
-  function buildButtonsHtml(lat, lon) {
+  function buildCoordButtonsHtml(lat, lon) {
     const third = isIOS() ? { t: "apple", icon: "🍎", label: "Apple Maps" } : { t: "waze", icon: "🅆", label: "Waze" };
     const btn = (target, icon, label, primary) =>
       `<button type="button" class="launch-btn${primary ? " primary" : ""}" data-nav-target="${target}" data-nav-lat="${lat}" data-nav-lon="${lon}">${icon} ${label}</button>`;
@@ -83,25 +112,39 @@
     );
   }
 
-  // Cerca nel container i link Google Maps con coordinate esplicite
-  // (?...destination=lat,lon) e aggiunge subito dopo il paragrafo che
-  // li contiene una riga di bottoni di navigazione rapida.
+  function buildAddressButtonsHtml(address, googleUrl) {
+    const escAddr = address.replace(/"/g, "&quot;");
+    const escUrl = googleUrl.replace(/"/g, "&quot;");
+    const btn = (target, icon, label, primary) =>
+      `<button type="button" class="launch-btn${primary ? " primary" : ""}" data-nav-mode="address" data-nav-target="${target}" data-nav-address="${escAddr}" data-nav-google="${escUrl}">${icon} ${label}</button>`;
+    return '<div class="launch-row">' + btn("sygic", "🧭", "Sygic", true) + btn("google", "📍", "Google Maps") + "</div>";
+  }
+
+  // Cerca nel container i link Google Maps (con coordinate o con
+  // indirizzo testuale) e aggiunge subito dopo il paragrafo che li
+  // contiene una riga di bottoni di navigazione rapida.
   function enhance(container) {
     if (!container) return;
     // selettore volutamente semplice (niente "&" o "?"): alcuni motori CSS
     // vanno in errore o non trovano nulla con caratteri speciali nel valore
     const anchors = Array.from(container.querySelectorAll('a[href*="google.com/maps/dir/"]'));
     anchors.forEach((a) => {
-      const m = a.getAttribute("href").match(/destination=(-?\d+\.\d+),(-?\d+\.\d+)/);
-      if (!m) return; // link ad indirizzo testuale, non a coordinate: niente bottoni
-      const lat = m[1];
-      const lon = m[2];
+      const href = a.getAttribute("href");
       const p = a.closest("p") || a;
       if (p.nextElementSibling && p.nextElementSibling.classList && p.nextElementSibling.classList.contains("launch-row")) {
         return; // già aggiunto (es. in caso di doppio render)
       }
+
+      const coordMatch = href.match(/destination=(-?\d+\.\d+),(-?\d+\.\d+)/);
       const wrap = document.createElement("div");
-      wrap.innerHTML = buildButtonsHtml(lat, lon);
+      if (coordMatch) {
+        wrap.innerHTML = buildCoordButtonsHtml(coordMatch[1], coordMatch[2]);
+      } else {
+        const addrMatch = href.match(/destination=([^&]+)/);
+        if (!addrMatch) return;
+        const address = decodeURIComponent(addrMatch[1].replace(/\+/g, " "));
+        wrap.innerHTML = buildAddressButtonsHtml(address, href);
+      }
       p.insertAdjacentElement("afterend", wrap.firstElementChild);
     });
   }
@@ -112,7 +155,7 @@
     const btn = e.target.closest(".launch-btn");
     if (!btn) return;
     e.preventDefault();
-    go(btn.getAttribute("data-nav-target"), btn.getAttribute("data-nav-lat"), btn.getAttribute("data-nav-lon"));
+    go(btn);
   });
 
   global.RoadbookNav = { enhance, go, urlsFor, isIOS, isAndroid };
