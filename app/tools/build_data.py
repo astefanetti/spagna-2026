@@ -83,6 +83,7 @@ PAGE_DEFS = [
     ("ristoranti", "Allegati", "allegati/ristoranti.md"),
     ("aree-camper", "Allegati", "allegati/aree-camper.md"),
     ("numeri-utili", "Appendici", "appendici/numeri-utili.md"),
+    ("navigazione", "Appendici", "appendici/navigazione.md"),
 ]
 
 

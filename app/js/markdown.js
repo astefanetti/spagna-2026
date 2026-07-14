@@ -3,11 +3,14 @@
  * librerie esterne (l'app deve funzionare offline al 100%, anche senza
  * aver mai toccato una CDN). Copre il sottoinsieme di markdown usato nei
  * file di questo roadbook: titoli, paragrafi, liste, liste con checkbox,
- * tabelle GFM, grassetto/corsivo/codice inline, link, linee orizzontali
- * e le righe "____" usate come spazi da compilare a mano.
+ * tabelle GFM, grassetto/corsivo/codice inline, link (anche URL "nude"),
+ * linee orizzontali e le righe "____"/"...." usate come spazi da compilare
+ * a mano.
  */
 (function (global) {
   "use strict";
+
+  const MARK = String.fromCharCode(0); // carattere di controllo, non appare mai nel markdown reale
 
   function hash(str) {
     let h = 5381;
@@ -26,14 +29,29 @@
 
   function inline(text) {
     let t = escapeHtml(text);
+    const stash = [];
+    function stow(html) {
+      stash.push(html);
+      return MARK + (stash.length - 1) + MARK;
+    }
     // link [testo](url)
-    t = t.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    t = t.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, function (_, label, url) {
+      return stow('<a href="' + url + '" target="_blank" rel="noopener">' + label + "</a>");
+    });
+    // URL "nude" (non già dentro un link markdown, già sostituito sopra)
+    t = t.replace(/https?:\/\/[^\s<)]+/g, function (url) {
+      return stow('<a href="' + url + '" target="_blank" rel="noopener">' + url + "</a>");
+    });
     // codice `code`
     t = t.replace(/`([^`]+)`/g, "<code>$1</code>");
     // grassetto **bold**
     t = t.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
     // corsivo *it* (non tocca ** già consumati)
     t = t.replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, "$1<em>$2</em>");
+    // ripristina i link accantonati
+    t = t.replace(new RegExp(MARK + "(\\d+)" + MARK, "g"), function (_, idx) {
+      return stash[Number(idx)];
+    });
     return t;
   }
 
@@ -203,9 +221,8 @@
         buf.push(lines[i].trim());
         i++;
       }
-      const text = buf.join(" ");
-      pendingLabel = text;
-      out.push(`<p>${inline(text)}</p>`);
+      pendingLabel = buf.join(" ");
+      out.push(`<p>${buf.map(inline).join("<br>")}</p>`);
     }
     closeList();
     return out.join("\n");
