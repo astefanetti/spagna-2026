@@ -266,7 +266,14 @@
     }
     setHeader(page.title, page.group, true);
     const bodyHtml = window.RoadbookMD.mdToHtml(page.body || "", `page-${page.id}`);
-    $view.innerHTML = `<div class="md">${bodyHtml}</div>`;
+    const profileHtml =
+      id === "navigazione"
+        ? `<div class="card">
+            <p style="margin:0 0 10px"><strong>Prima di partire:</strong> imposta una volta sola il profilo Camper in Sygic, così i percorsi calcolati tengono conto delle dimensioni del van.</p>
+            <div class="launch-row"><button type="button" class="launch-btn primary" data-nav-target="camperProfile">🚐 Imposta profilo Camper in Sygic</button></div>
+          </div>`
+        : "";
+    $view.innerHTML = `${profileHtml}<div class="md">${bodyHtml}</div>`;
     window.RoadbookMD.wireInteractivity($view);
     if (window.RoadbookNav) window.RoadbookNav.enhance($view);
   }

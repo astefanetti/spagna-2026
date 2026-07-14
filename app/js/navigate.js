@@ -69,9 +69,25 @@
     }, timeoutMs);
   }
 
+  // Imposta il profilo veicolo in Sygic (rou=cmp per camper, rou=tru per
+  // truck...). Comando "fire and forget": se Sygic non è installato non
+  // succede visibilmente nulla, non c'è un fallback sensato da offrire.
+  function setVehicleProfile(profile) {
+    try {
+      window.location.href = `com.sygic.aura://truckSettings|rou=${profile}`;
+    } catch (e) {
+      // schema non gestito: niente da fare, l'utente può impostarlo a mano
+    }
+  }
+
   function go(btn) {
     const target = btn.getAttribute("data-nav-target");
     const mode = btn.getAttribute("data-nav-mode") || "coord";
+
+    if (target === "camperProfile") {
+      setVehicleProfile("cmp");
+      return;
+    }
 
     if (mode === "address") {
       const address = btn.getAttribute("data-nav-address") || "";
@@ -158,5 +174,5 @@
     go(btn);
   });
 
-  global.RoadbookNav = { enhance, go, urlsFor, isIOS, isAndroid };
+  global.RoadbookNav = { enhance, go, urlsFor, isIOS, isAndroid, setVehicleProfile };
 })(window);

@@ -8,6 +8,8 @@ Una destinazione per ogni trasferimento in van (più le tappe intermedie da ferm
 
 Nell'app trovi anche una riga di bottoni **🧭 Sygic / 📍 Google Maps / 🅆 Waze (o 🍎 Apple Maps su iPhone)** subito sotto ogni tappa: tocca 🧭 e prova ad aprire Sygic, se non è installato passa da solo a Google Maps dopo un secondo; gli altri due bottoni aprono direttamente l'app scelta. I link qui sopra restano comunque, utili anche fuori dall'app.
 
+In cima alla pagina, nell'app, c'è anche un bottone **🚐 Imposta profilo Camper in Sygic**: da toccare una volta sola (funziona anche con Sygic Truck) per far calcolare a Sygic i percorsi tenendo conto delle dimensioni del van invece che come per un'auto normale.
+
 Le coordinate sono state verificate una per una (fonti ufficiali quando esistevano, altrimenti la fonte più specifica trovata). Dove la fonte non è ufficiale o il punto è impreciso, è segnalato nella colonna Note — controllale su Google Maps satellitare prima di partire.
 
 ⚠️ **Due cose da deciderete prima di stampare il roadbook definitivo**, emerse durante la verifica (vedi dettagli sotto la tabella):
