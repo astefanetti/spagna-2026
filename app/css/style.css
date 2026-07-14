@@ -193,6 +193,36 @@ a { color: var(--teal-700); }
 .badge.warn { background: #fdf1de; color: #8a5a12; }
 .badge.ok { background: #e4f5eb; color: #276b48; }
 
+/* Bottoni di navigazione rapida (Sygic/Google Maps/Waze-Apple) */
+.launch-row {
+  display: flex;
+  gap: 8px;
+  margin: 6px 0 16px;
+  flex-wrap: wrap;
+}
+.launch-btn {
+  flex: 1;
+  min-width: 96px;
+  border: none;
+  border-radius: 12px;
+  background: #eef3f2;
+  color: var(--teal-800);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  padding: 10px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.launch-btn:active { background: #e2eae8; }
+.launch-btn.primary {
+  background: var(--terracotta);
+  color: white;
+}
+.launch-btn.primary:active { background: var(--terracotta-dark); }
+
 /* Day nav prev/next */
 .day-pager {
   display: flex;

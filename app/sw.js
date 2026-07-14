@@ -1,4 +1,4 @@
-const CACHE_NAME = "roadbook-es-2026-v1";
+const CACHE_NAME = "roadbook-es-2026-v2";
 const SHELL_FILES = [
   "./",
   "index.html",
@@ -6,6 +6,7 @@ const SHELL_FILES = [
   "css/style.css",
   "js/app.js",
   "js/markdown.js",
+  "js/navigate.js",
   "data/days.json",
   "data/pages.json",
   "icons/icon-192.png",

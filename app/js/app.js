@@ -235,6 +235,7 @@
       </div>
     `;
     window.RoadbookMD.wireInteractivity($view);
+    if (window.RoadbookNav) window.RoadbookNav.enhance($view);
     updateProgress();
   }
 
@@ -267,6 +268,7 @@
     const bodyHtml = window.RoadbookMD.mdToHtml(page.body || "", `page-${page.id}`);
     $view.innerHTML = `<div class="md">${bodyHtml}</div>`;
     window.RoadbookMD.wireInteractivity($view);
+    if (window.RoadbookNav) window.RoadbookNav.enhance($view);
   }
 
   // ---------- ROUTER ----------

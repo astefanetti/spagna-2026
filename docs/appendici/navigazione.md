@@ -6,6 +6,8 @@ Una destinazione per ogni trasferimento in van (più le tappe intermedie da ferm
 
 **Sygic** → link diretto che apre l'app Sygic (se installata) già impostata sulla navigazione verso quel punto — niente copia-incolla di coordinate. Funziona sia su Android che su iPhone; se Sygic non è installato, apre comunque una pagina web di riserva.
 
+Nell'app trovi anche una riga di bottoni **🧭 Sygic / 📍 Google Maps / 🅆 Waze (o 🍎 Apple Maps su iPhone)** subito sotto ogni tappa: tocca 🧭 e prova ad aprire Sygic, se non è installato passa da solo a Google Maps dopo un secondo; gli altri due bottoni aprono direttamente l'app scelta. I link qui sopra restano comunque, utili anche fuori dall'app.
+
 Le coordinate sono state verificate una per una (fonti ufficiali quando esistevano, altrimenti la fonte più specifica trovata). Dove la fonte non è ufficiale o il punto è impreciso, è segnalato nella colonna Note — controllale su Google Maps satellitare prima di partire.
 
 ⚠️ **Due cose da deciderete prima di stampare il roadbook definitivo**, emerse durante la verifica (vedi dettagli sotto la tabella):
