@@ -1,8 +1,13 @@
 /*
- * Bottoni "naviga verso" con tentativo Sygic + fallback automatico.
- * Non tocca i link testuali già presenti nel markdown (restano come
- * riferimento/copia manuale): aggiunge in più una riga di bottoni
- * pensata per il tocco su telefono, con rilevamento della piattaforma.
+ * Bottoni "naviga verso" con tentativo Sygic + fallback automatico
+ * (solo Android: su iOS il sistema mostra sempre una conferma nativa
+ * per gli schemi custom, che renderebbe il fallback automatico
+ * inaffidabile — vedi commento su openWithFallback). Tutte le
+ * navigazioni avvengono nella stessa scheda (niente nuove schede
+ * Chrome/Safari che si aprono da sole). Non tocca i link testuali
+ * già presenti nel markdown (restano come riferimento/copia manuale):
+ * aggiunge in più una riga di bottoni pensata per il tocco su
+ * telefono, con rilevamento della piattaforma.
  */
 (function (global) {
   "use strict";
@@ -44,8 +49,47 @@
   // Tenta di aprire l'app Sygic; se dopo un breve timeout la pagina
   // non è stata nascosta (segno che un'altra app si è aperta sopra),
   // apre l'alternativa passata come fallback.
+  //
+  // Su iOS il sistema mostra sempre una conferma nativa ("Apri in
+  // Sygic?") per gli schemi custom aperti da una pagina web, e quella
+  // conferma può restare a schermo per un tempo imprevedibile mentre la
+  // persona decide. In quel lasso di tempo la pagina NON risulta
+  // nascosta, quindi un timer non può sapere se poi si è confermato
+  // Sygic o no: rischia di aprire comunque Google Maps subito dopo,
+  // anche a conferma già data. Per questo su iOS non si programma
+  // nessun fallback automatico: si tenta solo Sygic, e se non si apre
+  // la persona tocca semplicemente il bottone accanto (Google Maps /
+  // Apple Maps). Su Android, dove questa conferma di sistema non c'è,
+  // il fallback automatico resta attivo.
   function openWithFallback(appUrl, fallbackUrl, timeoutMs) {
     timeoutMs = timeoutMs || 1300;
+
+    let threwSync = false;
+    try {
+      window.location.href = appUrl;
+    } catch (e) {
+      // qualche browser/webview rifiuta subito gli schemi custom non
+      // registrati invece di limitarsi a ignorarli: lo segnaliamo, ma la
+      // decisione su cosa fare dopo resta comunque legata alla piattaforma
+      // (vedi sotto), non a questo dettaglio implementativo.
+      threwSync = true;
+    }
+
+    if (!fallbackUrl) return;
+
+    if (isIOS()) {
+      // niente fallback automatico su iOS, vedi commento sopra: anche se
+      // il tentativo ha lanciato un'eccezione, non c'è un timing
+      // affidabile da usare, meglio lasciare il bottone accanto.
+      return;
+    }
+
+    if (threwSync) {
+      // niente da aspettare: si passa subito all'alternativa
+      window.location.href = fallbackUrl;
+      return;
+    }
+
     let handed = false;
     function markHanded() {
       handed = true;
@@ -53,18 +97,12 @@
     document.addEventListener("visibilitychange", markHanded, { once: true });
     window.addEventListener("blur", markHanded, { once: true });
 
-    try {
-      window.location.href = appUrl;
-    } catch (e) {
-      // alcuni browser rifiutano schemi custom non registrati: si passa
-      // subito al fallback invece di aspettare il timeout
-    }
-
     setTimeout(() => {
       document.removeEventListener("visibilitychange", markHanded);
       window.removeEventListener("blur", markHanded);
-      if (!handed && fallbackUrl) {
-        window.open(fallbackUrl, "_blank", "noopener");
+      if (!handed) {
+        // stessa scheda, non una nuova: evita di lasciare schede vuote in giro
+        window.location.href = fallbackUrl;
       }
     }, timeoutMs);
   }
@@ -96,7 +134,7 @@
       if (target === "sygic") {
         openWithFallback(u.sygicApp, u.google);
       } else if (target === "google") {
-        window.open(u.google, "_blank", "noopener");
+        window.location.href = u.google;
       }
       return;
     }
@@ -107,11 +145,11 @@
     if (target === "sygic") {
       openWithFallback(u.sygicApp, u.google);
     } else if (target === "google") {
-      window.open(u.google, "_blank", "noopener");
+      window.location.href = u.google;
     } else if (target === "apple") {
-      window.open(u.apple, "_blank", "noopener");
+      window.location.href = u.apple;
     } else if (target === "waze") {
-      window.open(u.waze, "_blank", "noopener");
+      window.location.href = u.waze;
     }
   }
 

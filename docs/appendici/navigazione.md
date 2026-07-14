@@ -6,7 +6,7 @@ Una destinazione per ogni trasferimento in van (più le tappe intermedie da ferm
 
 **Sygic** → link diretto che apre l'app Sygic (se installata) già impostata sulla navigazione verso quel punto — niente copia-incolla di coordinate. Funziona sia su Android che su iPhone; se Sygic non è installato, apre comunque una pagina web di riserva.
 
-Nell'app trovi anche una riga di bottoni **🧭 Sygic / 📍 Google Maps / 🅆 Waze (o 🍎 Apple Maps su iPhone)** subito sotto ogni tappa: tocca 🧭 e prova ad aprire Sygic, se non è installato passa da solo a Google Maps dopo un secondo; gli altri due bottoni aprono direttamente l'app scelta. I link qui sopra restano comunque, utili anche fuori dall'app.
+Nell'app trovi anche una riga di bottoni **🧭 Sygic / 📍 Google Maps / 🅆 Waze (o 🍎 Apple Maps su iPhone)** subito sotto ogni tappa. Su Android, 🧭 prova ad aprire Sygic e se non è installato passa da solo a Google Maps dopo un secondo. Su iPhone niente passaggio automatico: iOS mostra sempre una sua conferma nativa ("Apri in Sygic?") per questo tipo di link, e non c'è modo affidabile di sapere se poi hai confermato o no — quindi se tocchi 🧭 e Sygic non si apre (o annulli la conferma), tocca semplicemente 📍 Google Maps o 🍎 Apple Maps accanto. I link qui sopra restano comunque, utili anche fuori dall'app.
 
 In cima alla pagina, nell'app, c'è anche un bottone **🚐 Imposta profilo Camper in Sygic**: da toccare una volta sola (funziona anche con Sygic Truck) per far calcolare a Sygic i percorsi tenendo conto delle dimensioni del van invece che come per un'auto normale.
 
