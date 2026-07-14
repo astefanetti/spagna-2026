@@ -46,6 +46,25 @@
     };
   }
 
+  // Safari (anche installata come PWA) su iOS è capriccioso quando si
+  // prova ad aprire uno schema custom assegnando window.location.href
+  // da uno script: a volte non succede proprio nulla, senza errori e
+  // senza alcuna conferma. Il modo che funziona in modo affidabile è
+  // creare un vero elemento <a href="schema://..."> e simulare il click
+  // su quello, come farebbe la persona toccando un link vero.
+  function openCustomScheme(url) {
+    const a = document.createElement("a");
+    a.href = url;
+    a.style.position = "fixed";
+    a.style.opacity = "0";
+    a.style.pointerEvents = "none";
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      if (a.parentNode) a.parentNode.removeChild(a);
+    }, 500);
+  }
+
   // Tenta di aprire l'app Sygic; se dopo un breve timeout la pagina
   // non è stata nascosta (segno che un'altra app si è aperta sopra),
   // apre l'alternativa passata come fallback.
@@ -66,7 +85,7 @@
 
     let threwSync = false;
     try {
-      window.location.href = appUrl;
+      openCustomScheme(appUrl);
     } catch (e) {
       // qualche browser/webview rifiuta subito gli schemi custom non
       // registrati invece di limitarsi a ignorarli: lo segnaliamo, ma la
@@ -112,7 +131,7 @@
   // succede visibilmente nulla, non c'è un fallback sensato da offrire.
   function setVehicleProfile(profile) {
     try {
-      window.location.href = `com.sygic.aura://truckSettings|rou=${profile}`;
+      openCustomScheme(`com.sygic.aura://truckSettings|rou=${profile}`);
     } catch (e) {
       // schema non gestito: niente da fare, l'utente può impostarlo a mano
     }
