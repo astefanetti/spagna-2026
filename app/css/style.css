@@ -193,12 +193,16 @@ a { color: var(--teal-700); }
 .badge.warn { background: #fdf1de; color: #8a5a12; }
 .badge.ok { background: #e4f5eb; color: #276b48; }
 
-/* Bottoni di navigazione rapida (Sygic/Google Maps/Waze-Apple) */
+/* Bottoni di navigazione rapida (Sygic/Magic Earth/Google Maps/Waze-Apple) */
 .launch-row {
   display: flex;
   gap: 8px;
   margin: 6px 0 16px;
   flex-wrap: wrap;
+}
+/* Con 4 bottoni: due colonne, altrimenti su telefono si schiacciano */
+.launch-row.grid-2 .launch-btn {
+  flex-basis: calc(50% - 4px);
 }
 .launch-btn {
   flex: 1;

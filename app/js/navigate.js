@@ -1,5 +1,5 @@
 /*
- * Bottoni "naviga verso" con tentativo Sygic + fallback automatico
+ * Bottoni "naviga verso" con tentativo app (Sygic, Magic Earth) + fallback automatico
  * (solo Android: su iOS il sistema mostra sempre una conferma nativa
  * per gli schemi custom, che renderebbe il fallback automatico
  * inaffidabile — vedi commento su openWithFallback). Tutte le
@@ -30,6 +30,10 @@
       // com.sygic.aura://coordinate|lon|lat|drive
       sygicApp: `com.sygic.aura://coordinate|${lon}|${lat}|drive`,
       sygicWeb: `https://go.sygic.com/directions?to=${ll}`,
+      // drive_to avvia la navigazione in auto dalla posizione corrente,
+      // come da specifiche ufficiali Magic Earth (magicearth.com/developers):
+      // magicearth://?drive_to&lat=48.85649&lon=2.35216
+      magicEarthApp: `magicearth://?drive_to&lat=${lat}&lon=${lon}`,
       google: `https://www.google.com/maps/dir/?api=1&destination=${ll}`,
       apple: `https://maps.apple.com/?daddr=${ll}&dirflg=d`,
       waze: `https://waze.com/ul?ll=${ll}&navigate=yes`,
@@ -42,6 +46,9 @@
   function urlsForAddress(address, googleUrl) {
     return {
       sygicApp: `com.sygic.aura://search|${encodeURIComponent(address)}|drive`,
+      // daddr apre le indicazioni verso un indirizzo testuale, come da
+      // specifiche ufficiali Magic Earth: magicearth://?daddr=CH1+6BJ+United+Kingdom
+      magicEarthApp: `magicearth://?daddr=${encodeURIComponent(address)}`,
       google: googleUrl,
     };
   }
@@ -65,18 +72,18 @@
     }, 500);
   }
 
-  // Tenta di aprire l'app Sygic; se dopo un breve timeout la pagina
-  // non è stata nascosta (segno che un'altra app si è aperta sopra),
-  // apre l'alternativa passata come fallback.
+  // Tenta di aprire l'app di navigazione (Sygic o Magic Earth); se dopo
+  // un breve timeout la pagina non è stata nascosta (segno che un'altra
+  // app si è aperta sopra), apre l'alternativa passata come fallback.
   //
   // Su iOS il sistema mostra sempre una conferma nativa ("Apri in
-  // Sygic?") per gli schemi custom aperti da una pagina web, e quella
-  // conferma può restare a schermo per un tempo imprevedibile mentre la
-  // persona decide. In quel lasso di tempo la pagina NON risulta
-  // nascosta, quindi un timer non può sapere se poi si è confermato
-  // Sygic o no: rischia di aprire comunque Google Maps subito dopo,
-  // anche a conferma già data. Per questo su iOS non si programma
-  // nessun fallback automatico: si tenta solo Sygic, e se non si apre
+  // Sygic?" / "Apri in Magic Earth?") per gli schemi custom aperti da
+  // una pagina web, e quella conferma può restare a schermo per un tempo
+  // imprevedibile mentre la persona decide. In quel lasso di tempo la
+  // pagina NON risulta nascosta, quindi un timer non può sapere se poi
+  // si è confermato o no: rischia di aprire comunque Google Maps subito
+  // dopo, anche a conferma già data. Per questo su iOS non si programma
+  // nessun fallback automatico: si tenta solo l'app, e se non si apre
   // la persona tocca semplicemente il bottone accanto (Google Maps /
   // Apple Maps). Su Android, dove questa conferma di sistema non c'è,
   // il fallback automatico resta attivo.
@@ -152,6 +159,8 @@
       const u = urlsForAddress(address, googleUrl);
       if (target === "sygic") {
         openWithFallback(u.sygicApp, u.google);
+      } else if (target === "magicearth") {
+        openWithFallback(u.magicEarthApp, u.google);
       } else if (target === "google") {
         window.location.href = u.google;
       }
@@ -163,6 +172,8 @@
     const u = urlsFor(lat, lon);
     if (target === "sygic") {
       openWithFallback(u.sygicApp, u.google);
+    } else if (target === "magicearth") {
+      openWithFallback(u.magicEarthApp, u.google);
     } else if (target === "google") {
       window.location.href = u.google;
     } else if (target === "apple") {
@@ -173,14 +184,17 @@
   }
 
   function buildCoordButtonsHtml(lat, lon) {
-    const third = isIOS() ? { t: "apple", icon: "🍎", label: "Apple Maps" } : { t: "waze", icon: "🅆", label: "Waze" };
+    const last = isIOS() ? { t: "apple", icon: "🍎", label: "Apple Maps" } : { t: "waze", icon: "🅆", label: "Waze" };
     const btn = (target, icon, label, primary) =>
       `<button type="button" class="launch-btn${primary ? " primary" : ""}" data-nav-target="${target}" data-nav-lat="${lat}" data-nav-lon="${lon}">${icon} ${label}</button>`;
+    // "grid-2" dispone i 4 bottoni su due colonne: in un'unica riga
+    // diventerebbero troppo stretti sugli schermi dei telefoni
     return (
-      '<div class="launch-row">' +
+      '<div class="launch-row grid-2">' +
       btn("sygic", "🧭", "Sygic", true) +
+      btn("magicearth", "🌍", "Magic Earth") +
       btn("google", "📍", "Google Maps") +
-      btn(third.t, third.icon, third.label) +
+      btn(last.t, last.icon, last.label) +
       "</div>"
     );
   }
@@ -190,7 +204,13 @@
     const escUrl = googleUrl.replace(/"/g, "&quot;");
     const btn = (target, icon, label, primary) =>
       `<button type="button" class="launch-btn${primary ? " primary" : ""}" data-nav-mode="address" data-nav-target="${target}" data-nav-address="${escAddr}" data-nav-google="${escUrl}">${icon} ${label}</button>`;
-    return '<div class="launch-row">' + btn("sygic", "🧭", "Sygic", true) + btn("google", "📍", "Google Maps") + "</div>";
+    return (
+      '<div class="launch-row">' +
+      btn("sygic", "🧭", "Sygic", true) +
+      btn("magicearth", "🌍", "Magic Earth") +
+      btn("google", "📍", "Google Maps") +
+      "</div>"
+    );
   }
 
   // Cerca nel container i link Google Maps (con coordinate o con
