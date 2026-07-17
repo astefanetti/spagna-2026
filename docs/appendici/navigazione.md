@@ -17,6 +17,24 @@ Le coordinate sono state verificate una per una (fonti ufficiali quando esisteva
 1. Il **"Rayo Verde"** del Giorno 12 non è a Comillas: è un chiringuito a Gerra, vicino San Vicente de la Barquera, ~15 km più a ovest.
 2. **"La Terrazuca de Gera"** del Giorno 14 è nello stesso punto — quindi è geograficamente vicino al Giorno 12/13 (zona Comillas/San Vicente), non a Mogrovejo. Probabile tappa da spostare.
 
+## Mappe offline da scaricare (prima di partire, in Wi-Fi)
+
+Il routing offline funziona solo se sono scaricate **tutte** le mappe lungo il percorso, comprese le regioni solo attraversate: è il motivo per cui in lista ci sono anche La Rioja e la PACA.
+
+**Magic Earth** (suddivisa per comunità autonome / regioni amministrative):
+
+- 🇪🇸 **País Vasco** (gg. 4-8 + transito g. 14), **Cantabria** (gg. 7, 9-13), **Navarra** (g. 14), **La Rioja** (solo transito g. 14, AP-68 Logroño→Tudela), **Aragón** (g. 15). In alternativa la Spagna intera pesa solo ~2 GB: con 11 giorni sul posto è la scelta più semplice. *(Castilla y León solo se il g. 14 si scende via Aguilar de Campoo/Burgos invece che via Bilbao.)*
+- 🇫🇷 **Auvergne-Rhône-Alpes** (gg. 1, 16-17: Fréjus, Chambéry, valle del Rodano), **Occitanie** (gg. 1-2, 15-16: Vénéjan, Tolosa, Saint-Bertrand), **Nouvelle-Aquitaine** (gg. 2-4, 15: Laruns, Pau, Bayonne), **Provence-Alpes-Côte d'Azur** (nessuna tappa, ma lo svincolo A7/A9 di Orange/Bollène è in Vaucluse: senza quella mappa il calcolo del percorso offline può incepparsi lì). La Francia intera pesa ~5,4-6 GB: meglio per regioni.
+- 🇮🇹 **Piemonte** e **Lombardia**.
+- ⚠️ Dal passaggio a freemium (fine 2025) il download delle mappe offline richiede **Magic Earth Premium** (~15-20 €/anno, prova gratuita 14 giorni). Il viaggio dura 18 giorni: la sola prova scadrebbe verso il giorno 14 (Bardenas) — meglio attivare l'abbonamento vero.
+- I nomi esatti delle voci in-app non sono documentati pubblicamente: l'elenco sopra è la geografia giusta, verificare le voci corrispondenti nell'app.
+
+**Sygic** (suddivisioni diverse):
+
+- 🇪🇸 stesse comunità autonome: País Vasco, Cantabria, Navarra, La Rioja, Aragón (+ eventuale Castilla y León).
+- 🇫🇷 stesse regioni attuali: Auvergne-Rhône-Alpes, Occitanie, Nouvelle-Aquitaine, PACA.
+- 🇮🇹 divisa in sole 6 macro-aree: basta **"Italia Nord-Ovest"** (copre Piemonte e Lombardia).
+
 ---
 
 ## Giorno 1 — Ciriè → Vénéjan

@@ -1,4 +1,4 @@
-const CACHE_NAME = "roadbook-es-2026-v5";
+const CACHE_NAME = "roadbook-es-2026-v6";
 const SHELL_FILES = [
   "./",
   "index.html",
